@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Upload;
 
 class TbFileController extends Controller
 {
@@ -27,8 +28,10 @@ class TbFileController extends Controller
         try {
             $file = $request->file('file_upload');
             $newName = $file->getClientOriginalName();
-            $path = $file->move(storage_path('uploads'), $newName);
-            return "sukses";
+            $upload = new Upload();
+            $upload->file_path = url('uploads/'.$newName);
+            $upload->save();
+            $path = $file->move(public_path('uploads'), $newName);
         } catch(\Exception $e){
             echo $e->getMessage();
             echo "<br>".$e->getLine();
